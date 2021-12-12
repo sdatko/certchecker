@@ -10,6 +10,8 @@ from certchecker.expiration import get_cert_expiration_from_file
 from certchecker.expiration import get_cert_expiration_from_host
 from certchecker.expiration import get_days_to_expiration
 from certchecker.utils import notify
+from certchecker.web import start_server
+from certchecker.web import update_server_data
 
 
 continuous_interval = 10
@@ -45,6 +47,7 @@ def continuous_step(scheduler, args):
 
     identifier, days = single_step(args)
 
+    update_server_data({identifier: days})
     print(identifier, days)
 
     if days < 0:
@@ -55,6 +58,9 @@ def continuous_run(args):
     notify('Started daemon.')
 
     try:
+        if args.web:
+            start_server()
+
         continuous_scheduler.enter(delay=continuous_interval, priority=1,
                                    action=continuous_step,
                                    argument=(continuous_scheduler, args))
@@ -67,6 +73,8 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-d', '--daemon', action="store_true", default=False,
                         help='run continuously in background')
+    parser.add_argument('-w', '--web', action="store_true", default=False,
+                        help='run web server with results')
     parser.add_argument('-f', '--file', type=str, default=None,
                         help='path to local file to verify')
     parser.add_argument('-t', '--host', type=str, default=None,
