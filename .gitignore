@@ -1,4 +1,7 @@
 *.py[cod]
 .*.swp
+/*.egg-info/
+/.coverage
+/.eggs/
 /.tox/
 __pycache__/
