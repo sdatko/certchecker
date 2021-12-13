@@ -42,18 +42,46 @@
     <body>
         <div class="outer">
             <div class="inner">
+{% if authenticated %}
                 <table>
-{% for result in results %}
-    {% if results[result] < 0 %}
-                <tr style="color: red;">
-    {% else %}
-                <tr>
-    {% endif %}
-                <td>{{ result }}</td>
-                <td>{{ results[result] }}</td>
-                </tr>
-{% endfor %}
+    {% for result in results %}
+        {% if results[result] < 0 %}
+                    <tr style="color: red;">
+        {% else %}
+                    <tr>
+        {% endif %}
+                        <td>{{ result }}</td>
+                        <td>{{ results[result] }}</td>
+                    </tr>
+    {% endfor %}
                 </table>
+{% elif secondfactor %}
+                <form action="/" method="post">
+                    <table>
+                        <tr>
+                            <td><input type="text" name="token" /></td>
+                            <td><input type="submit" name="submit" value="Auth" /></td>
+                        </tr>
+                    </table>
+                </form>
+{% else %}
+                <form action="/" method="post">
+                    <table>
+                        <tr>
+                            <td>User:</td>
+                            <td><input type="text" name="user" /></td>
+                        </tr>
+                        <tr>
+                            <td>Pass:</td>
+                            <td><input type="password" name="pass" /></td>
+                        </tr>
+                        <tr>
+                            <td><!-- --></td>
+                            <td><input type="submit" name="submit" value="Auth" /></td>
+                        </tr>
+                    </table>
+                </form>
+{% endif %}
             </div>
          </div>
     </body>
